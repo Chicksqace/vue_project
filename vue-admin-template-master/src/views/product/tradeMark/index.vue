@@ -44,7 +44,27 @@
 
 <script>
 export default {
-
+  data() {
+    return {
+      // 代表分页器是第几页
+      page:1,
+      // 当前页数展示多少条数据
+      limit:3,
+    }
+  },
+  mounted(){
+    // 获取列表数据方法
+    this.getPageList()
+  },
+  methods:{
+    async getPageList(){
+      console.log(1);
+      const {page,limit}=this;
+      // 这个写接口需要传参
+      let result=await this.$Api.trademark.reqTradeMarkList(page,limit);
+      console.log(result);
+    }
+  }
 }
 </script>
 
