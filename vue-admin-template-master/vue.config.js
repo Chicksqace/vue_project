@@ -44,10 +44,10 @@ module.exports = {
         pathRewrite: { '^/dev-api': '' },
       },
 
-      '/api': {
+      '/dev1-api': {
         target: 'http://39.98.123.211:8510/',
         changOrigin: true,
-        pathRewrite: { '^/dev-api': '' },
+        pathRewrite: { '^/dev1-api': '' },
       },
     },
     // before: require('./mock/mock-server.js')
