@@ -13,7 +13,7 @@
       </el-table-column>
       <el-table-column prop="prop" label="操作" width="width">
         <template slot-scope="{ row, $index }">
-          <el-button type="warning" icon="el-icon-edit" size="mini" @click="updateTradeMark">修改</el-button>
+          <el-button type="warning" icon="el-icon-edit" size="mini" @click="updateTradeMark(row)">修改</el-button>
           <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
         </template>
       </el-table-column>
@@ -39,14 +39,19 @@
       visible.sync：控制对话框显示与隐藏的
     
     -->
-    <el-dialog title="添加品牌" :visible.sync="dialogFormVisible">
-      <el-form style="width: 80%">
+    <el-dialog :title="tmForm.id ? '修改品牌' : '添加品牌'" :visible.sync="dialogFormVisible">
+      <el-form style="width: 80%" v-model="tmForm">
         <el-form-item label="品牌名称" label-width="100px">
-          <el-input autocomplete="off"></el-input>
+          <el-input autocomplete="off" v-model="tmForm.tmName"></el-input>
         </el-form-item>
         <el-form-item label="品牌Logo" label-width="100px">
-          <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+          <!-- 这里收集数据：不能使用v-model，因为不是表单元素
+              action：设置图片上传的路径
+              on-succes:图片上传成功执行一次
+              before-upload:图片上传之前，执行一次
+          -->
+          <el-upload class="avatar-uploader" action="/dev1-api/admin/product/fileUpload" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+            <img v-if="tmForm.logoUrl" :src="tmForm.logoUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
@@ -54,7 +59,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addOrUpdateTradeMark">确 定</el-button>
         
       </div>
     </el-dialog>
@@ -76,7 +81,11 @@ export default {
       // 对话框显示与隐藏控制的属性
       dialogFormVisible: false,
       // 上传图片
-      imageUrl: ''
+      imageUrl: '',
+      tmForm:{
+        tmName:'',
+        logoUrl:''
+      }
     }
   },
   mounted() {
@@ -102,25 +111,47 @@ export default {
     // 点击显示对话框
     showDialog() {
       this.dialogFormVisible = true
+      // 清理数据
+      this.tmForm={tmName:'',logoUrl:''}
     },
     // 修改名牌
-    updateTradeMark() {
+    updateTradeMark(row) {
+      console.log(row);
       this.dialogFormVisible = true
+      this.tmForm={...row}
     },
     handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
+      console.log(res);
+      // res 上传成功之后返回前端数据
+      // file 上传成功之后服务器返回的数据
+      this.tmForm.logoUrl=res.data
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg'
+      const isJPG = file.type === 'image/png'
       const isLt2M = file.size / 1024 / 1024 < 2
 
       if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
+        this.$message.error('上传头像图片只能是 png 格式!')
       }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
       return isJPG && isLt2M
+    },
+    // 添加品牌
+    async addOrUpdateTradeMark(){
+      this.dialogFormVisible=false;
+      let result=await this.$Api.trademark.reqAddOrUpdateTradeMark(this.tmForm);
+      console.log(result);
+      if(result.code==200){
+        // 单出信息
+        this.$message({
+          type:'success',
+          message:this.tmForm.id ? '修改品牌成功' : '添加品牌成功'
+        });
+        // 如果添加品牌：停留在第一页，修改品牌应该留在当前页
+        this.getPageList(this.tmForm.id?this.page:1)
+      }
     }
   }
 }
