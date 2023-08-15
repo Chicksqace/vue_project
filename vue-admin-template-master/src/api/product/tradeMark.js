@@ -21,3 +21,6 @@ export const reqAddOrUpdateTradeMark=(tradeMark)=>{
         return request({url:'/dev1-api/admin/product/baseTrademark/save',method:'post',data:tradeMark})
     }
 }
+
+// 删除品牌
+export const reqDeleteTradeMark=(id)=>request({url:`/dev1-api/admin/product/baseTrademark/remove/${id}`,method:'delete'})
