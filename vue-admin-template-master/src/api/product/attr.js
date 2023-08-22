@@ -11,3 +11,7 @@ export const reqCategory2List=(category1Id)=>request({url:`/dev1-api/admin/produ
 // 获取三级
 export const reqCategory3List=(category2Id)=>request({url:`/dev1-api/admin/product/getCategory3/${category2Id}`,method:'get'})
 
+// 获取平台属性接口
+export const reqAttrList=(category1Id,category2Id,category3Id)=>request({url:`/dev1-api/admin/product/attrInfoList/${category1Id}/${category2Id}/${category3Id}`,method:'get'})
+
+ 
