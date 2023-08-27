@@ -14,4 +14,7 @@ export const reqCategory3List=(category2Id)=>request({url:`/dev1-api/admin/produ
 // 获取平台属性接口
 export const reqAttrList=(category1Id,category2Id,category3Id)=>request({url:`/dev1-api/admin/product/attrInfoList/${category1Id}/${category2Id}/${category3Id}`,method:'get'})
 
+// 获取属性与属性值
+export const reqAddAttr=data=>request({url:`/dev1-api//admin/product/saveAttrInfo`,method:'post',data})
+
  
