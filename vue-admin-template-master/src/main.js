@@ -36,7 +36,8 @@ Vue.use(ElementUI, { locale })
 import api from '@/api';
 import CategorySelect from '@/components/CategorySelect'
 import HinButton from '@/components/HinButton'
-Vue.component(CategorySelect.name,CategorySelect,HinButton)
+Vue.component(CategorySelect.name,CategorySelect)
+Vue.component(HinButton.name,HinButton)
 Vue.prototype.$Api=api
 Vue.config.productionTip = false
 

@@ -14,10 +14,10 @@
           <el-table-column label="SPU描述" width="width" prop="description"></el-table-column>
           <el-table-column label="操作" width="width" prop="prop">
             <template slot-scope="{row,$index}">
-              <el-button type="success" icon="el-icon-plus" size="mini"></el-button>
-              <el-button type="warning" icon="el-icon-edit" size="mini"></el-button>
-              <el-button type="info" icon="el-icon-info" size="mini"></el-button>
-              <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+              <hint-button type="success" icon="el-icon-plus" size="mini" title="添加属性"></hint-button>
+              <hint-button type="warning" icon="el-icon-edit" size="mini" title="修改spu"></hint-button>
+              <hint-button type="info" icon="el-icon-info" size="mini" title="参看当前spu全部sku列表"></hint-button>
+              <hint-button type="danger" icon="el-icon-delete" size="mini" title="删除spu"></hint-button>
             </template>
           </el-table-column>
         </el-table>
@@ -25,11 +25,14 @@
           @current-change="currentChange" -->
         <el-pagination
         style="text-align:center;"
+        :current-page="page"
           :page-sizes="[3,5,10]"
-          :page-size="3"
+          :page-size="limit"
           layout="prev, pager, next, jumper,->,sizes,total"
-          :total="23" background>
-          :pager-count="7">
+          :total="total" background
+          @current-change="getSpuList"
+          @size-change="sizeChange"
+          >
         </el-pagination>
         
       </div>
@@ -72,14 +75,25 @@ export default {
         this.getSpuList()
       }
     },
-    async getSpuList(){
+    async getSpuList(pages=1){
+      this.page=pages
       const {page,limit,category3Id}=this
       let result=await this.$Api.spu.reqSpuList(page,limit,category3Id);
       if(result.code==200){
         this.total=result.data.total;
         this.records=result.data.records;
       }
+    },
+    // 分页器的某一页数据条数发生变化的回调
+    sizeChange(limit){
+      this.limit=limit
+      this.getSpuList()
     }
+    // 点击分页器第几页按钮的回调
+    // handleCurrentChange(page){
+    //   this.page=page
+    //   this.getSpuList()
+    // }
   }
 }
 </script>
