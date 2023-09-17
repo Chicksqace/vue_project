@@ -7,7 +7,7 @@
       <!-- 底部这里将来是有三部分进行切换 -->
       <div v-show="scene==0">
         <!-- 展示spu列表的结构 -->
-        <el-button type="primary" icon="el-icon-plus"> 添加spu </el-button>
+        <el-button type="primary" icon="el-icon-plus" :disabled="!category3Id" @click="addSpu"> 添加spu </el-button>
         <el-table border style="width: 100%;" :data="records">
           <el-table-column type="index" label="序号" width="80" align="center"></el-table-column>
           <el-table-column label="SPU名称" width="width" prop="spuName"></el-table-column>
@@ -15,7 +15,7 @@
           <el-table-column label="操作" width="width" prop="prop">
             <template slot-scope="{row,$index}">
               <hint-button type="success" icon="el-icon-plus" size="mini" title="添加属性"></hint-button>
-              <hint-button type="warning" icon="el-icon-edit" size="mini" title="修改spu"></hint-button>
+              <hint-button type="warning" icon="el-icon-edit" size="mini" title="修改spu" @click="updateSpu(row)"></hint-button>
               <hint-button type="info" icon="el-icon-info" size="mini" title="参看当前spu全部sku列表"></hint-button>
               <hint-button type="danger" icon="el-icon-delete" size="mini" title="删除spu"></hint-button>
             </template>
@@ -92,6 +92,13 @@ export default {
     sizeChange(limit){
       this.limit=limit
       this.getSpuList()
+    },
+    addSpu(){
+      this.scene=1
+    },
+    // 修改某一个spu
+    updateSpu(row){
+      this.scene=1
     }
     // 点击分页器第几页按钮的回调
     // handleCurrentChange(page){
