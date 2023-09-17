@@ -5,7 +5,7 @@
     </el-card>
     <el-card style="margin: 20px 0px">
       <!-- 底部这里将来是有三部分进行切换 -->
-      <div>
+      <div v-show="scene==0">
         <!-- 展示spu列表的结构 -->
         <el-button type="primary" icon="el-icon-plus"> 添加spu </el-button>
         <el-table border style="width: 100%;" :data="records">
@@ -36,13 +36,16 @@
         </el-pagination>
         
       </div>
-      <div></div>
-      <div></div>
+      <SpuForm v-show="scene==1"></SpuForm>
+      <SkuForm v-show="scene==2"></SkuForm>
     </el-card>
   </div>
 </template>
 
 <script>
+// 引入子组件
+import SpuForm from './SpuFrom';
+import SkuForm from './SkuFrom';
 export default {
   name:'Spu',
   data() {
@@ -56,6 +59,7 @@ export default {
       limit:3,//每一页需要展示多少条数据
       records:[],//spu列表的数据
       total:0,//分页器一共需要展示数据的条数
+      scene:0,//0代表战术spu列表数据 1添加spu 2添加sku
     }
   },
   methods: {
@@ -94,6 +98,10 @@ export default {
     //   this.page=page
     //   this.getSpuList()
     // }
+  },
+  components:{
+    SpuForm,
+    SkuForm
   }
 }
 </script>
