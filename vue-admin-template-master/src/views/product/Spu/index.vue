@@ -36,7 +36,7 @@
         </el-pagination>
         
       </div>
-      <SpuForm v-show="scene==1"></SpuForm>
+      <SpuForm v-show="scene==1" @changeScene="changeScene" ref="spu"></SpuForm>
       <SkuForm v-show="scene==2"></SkuForm>
     </el-card>
   </div>
@@ -99,6 +99,11 @@ export default {
     // 修改某一个spu
     updateSpu(row){
       this.scene=1
+      // 获取子组件spuForm子组件
+      this.$refs.spu.initSpuData(row);
+    },
+    changeScene(sence){
+      this.scene=sence
     }
     // 点击分页器第几页按钮的回调
     // handleCurrentChange(page){
