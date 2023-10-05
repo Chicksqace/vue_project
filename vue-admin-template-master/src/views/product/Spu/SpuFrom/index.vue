@@ -42,10 +42,15 @@
 
 <script>
 export default {
+  name:"",
   data() {
       return {
         dialogImageUrl: '',
-        dialogVisible: false
+        dialogVisible: false,
+        spu:{},
+        tradeMarkList:[],
+        spuImageList:[],
+        saleAttrList:[]
       };
     },
     methods: {
@@ -57,8 +62,27 @@ export default {
         this.dialogVisible = true;
       },
       // 初始化SpuForm数据
-      initSpuData(spu){
-
+      async initSpuData(spu){
+        // spu信息
+        let spuResult=await this.$Api.spu.reqSpu(spu.id)
+        if(spuResult.code==200){
+          this.spu=spuResult
+        }
+        // 品牌信息
+        let tradeMarkResult=await this.$Api.spu.reqTradeMarkList()
+        if(tradeMarkResult.code==200){
+          this.tradeMarkList=tradeMarkResult.data
+        }
+        // spu图片
+        let spuImageResult=await this.$Api.spu.reqSpuImageList(spu.id)
+        if(spuImageResult.code==200){
+          this.spuImageList=spuImageResult.data
+        }
+        // 平台全部的销售属性
+        let saleResult=await this.$Api.spu.reqBaseSaleAttrList()
+        if(saleResult.code==200){
+          this.saleAttrList=saleResult.data
+        }
       }
     }
 }
