@@ -14,7 +14,7 @@
         <el-input type="textarea" rows="4" placeholder="描述" v-model="spu.description"></el-input>
       </el-form-item>
       <el-form-item label="spu图片">
-        <el-upload action="/dev1-api/admin/product/fileUpload" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :file-list="spuImageList">
+        <el-upload action="/dev1-api/admin/product/fileUpload" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :file-list="spuImageList" on-success="handlerSuccess">
           <i class="el-icon-plus"></i>
         </el-upload>
         <el-dialog :visible.sync="dialogVisible">
@@ -103,12 +103,23 @@ export default {
     }
   },
   methods: {
+    // 照片墙删除某个照片
     handleRemove(file, fileList) {
-      console.log(file, fileList)
+      // file 代表删除的照片
+      // fileList 照片墙剩余的照片
+      // 赋值
+      this.spuImageList=file.url
+// 对于已有的图片，显示数据需要name，url字段，但是对于服务器来说，不需要这些字段，因此要对数据进行处理
     },
+    // 图片预览回调
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
+    },
+    // 照片墙上传成功
+    handlerSuccess(response,file,fileList){
+      this.spuImageList=fileList
+
     },
     // 初始化SpuForm数据
     async initSpuData(spu) {
