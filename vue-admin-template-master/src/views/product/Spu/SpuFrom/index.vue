@@ -14,7 +14,7 @@
         <el-input type="textarea" rows="4" placeholder="描述" v-model="spu.description"></el-input>
       </el-form-item>
       <el-form-item label="spu图片">
-        <el-upload action="/dev1-api/admin/product/fileUpload" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :file-list="spuImageList" on-success="handlerSuccess">
+        <el-upload action="/dev1-api/admin/product/fileUpload" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :file-list="spuImageList" :on-success="handlerSuccess">
           <i class="el-icon-plus"></i>
         </el-upload>
         <el-dialog :visible.sync="dialogVisible">
@@ -22,10 +22,10 @@
         </el-dialog>
       </el-form-item>
       <el-form-item label="销售属性">
-        <el-select :placeholder="`还有${unSelectSaleAttr.length}项未选择`" v-model="attrId">
-          <el-option :label="unselect.name" :value="unselect.id" v-for="(unselect,index) in unSelectSaleAttr" :key="unselect.id"></el-option>
+        <el-select :placeholder="`还有${unSelectSaleAttr.length}项未选择`" v-model="attrIdAndName">
+          <el-option :label="unselect.name" :value="`${unselect.id}:${unselect.name}`" v-for="(unselect,index) in unSelectSaleAttr" :key="unselect.id"></el-option>
         </el-select>
-        <el-button type="primary" icon="el-icon-plus" :disabled="!attrId">添加销售属性</el-button>
+        <el-button type="primary" icon="el-icon-plus" :disabled="!attrIdAndName" @click="addSaleAttr">添加销售属性</el-button>
         <el-table border style="width: 100%;" :data="spu.spuSaleAttrList">
           <el-table-column type="index" label="序号" width="80px" align="center"></el-table-column>
           <el-table-column prop="saleAttrName" label="属性名" width="width"></el-table-column>
@@ -99,7 +99,7 @@ export default {
       tradeMarkList: [],
       spuImageList: [],
       saleAttrList: [],
-      attrId:'',//未选择的销售属性的id
+      attrIdAndName:'',//未选择的销售属性的id
     }
   },
   methods: {
@@ -147,6 +147,13 @@ export default {
       if (saleResult.code == 200) {
         this.saleAttrList = saleResult.data
       }
+    },
+    // 处理后的销售属性
+    addSaleAttr(){
+      const [baseSaleAttrId,saleAttrName]=this.attrIdAndName.split(':');
+      // 向spu对象中的spuSaleAttrList属性中添加新的销售属性
+      let newSaleAttr={baseSaleAttrId,saleAttrName,spuSaleAttrValueList:[]};
+      this.spu.spuSaleAttrList.push(newSaleAttr)
     }
   },
   computed:{
