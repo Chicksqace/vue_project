@@ -35,10 +35,10 @@
               <el-tag :key="tag" v-for="tag in row.spuSaleAttrValueList" closable :disable-transitions="false" >
                 {{ tag.saleAttrValueName }}
               </el-tag>
-              <!-- @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm" -->
-              <el-input class="input-new-tag" v-if="inputVisible" v-model="row.inputValue" ref="saveTagInput" size="small"> </el-input>
+              <!-- @keyup.enter.native="handleInputConfirm"-->
+              <el-input class="input-new-tag" v-if="row.inputVisible" v-model="row.inputValue" ref="saveTagInput" size="small"  @blur="handleInputConfirm(row)" > </el-input>
               <!--  @click="showInput" -->
-              <el-button v-else class="button-new-tag" size="small">添加</el-button>
+              <el-button v-else class="button-new-tag" size="small" @click="addSaleAttrValue(row)">添加</el-button>
             </template>
           </el-table-column>
           <el-table-column prop="index" label="操作" width="width" >
@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import LogoVue from '../../../../layout/components/Sidebar/Logo.vue'
 export default {
   name: 'SpuFrom',
   data() {
@@ -154,6 +155,33 @@ export default {
       // 向spu对象中的spuSaleAttrList属性中添加新的销售属性
       let newSaleAttr={baseSaleAttrId,saleAttrName,spuSaleAttrValueList:[]};
       this.spu.spuSaleAttrList.push(newSaleAttr)
+      this.attrIdAndName='';
+    },
+    addSaleAttrValue(row){
+      console.log(row);
+      // 点击销售属性当中添加按钮，需要button变成input，通过当前属性的inputVisible控制
+      // 添加这个属性
+      this.$set(row,'inputVisible',true)
+      this.$set(row,'inputValue','')
+    },
+    handleInputConfirm(row){
+      const {baseSaleAttrId,inputValue}=row;
+      // 属性值不能为空
+        if(inputValue.trim()==""){
+          this.$message('属性值不能未空');
+          return
+        }
+      // 属性值重复
+      let result=row.spuSaleAttrValueList.every(item=>item.saleAttrValueName!=inputValue);
+      if(!result){
+        this.$message('属性值不能重复')
+        return;
+      } 
+      // 新增的销售属性的值
+      let newSaleAttrValue={baseSaleAttrId,saleAttrValueName:inputValue};
+      // 新增
+      row.spuSaleAttrValueList.push(newSaleAttrValue);
+      row.inputVisible=false
     }
   },
   computed:{
