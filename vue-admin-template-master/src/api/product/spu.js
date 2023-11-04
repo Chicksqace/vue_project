@@ -19,3 +19,27 @@ export const reqSpuImageList = (spuId) => request({ url: `/dev1-api/admin/produc
 //GET /admin/product/baseSaleAttrList  
 
 export const reqBaseSaleAttrList = () => request({ url: '/dev1-api/admin/product/baseSaleAttrList', method: 'get' });
+
+// 修改spu,保存spu 区别是否携带id
+export const reqAddOrUpdateSpu = (spuInfo) =>{
+    // 携带参数
+    if(spuInfo.id){
+        return request({ url: '/dev1-api/admin/product/updateSpuInfo', method: 'post',data:spuInfo });
+    }else{
+        // 添加spu
+        return request({ url: '/dev1-api/admin/product/saveSpuInfo', method: 'post',data:spuInfo });
+    }
+}
+
+// 删除spu
+export const reqDeleteSpu = (spuId) => request({ url: `/dev1-api/admin/product/deleteSpu/${spuId}`, method: 'delete' });
+//获取图片的数据
+// export const reqSpuImageList = (spuId) => request({ url: `/dev1-api/admin/product/spuImageList/${spuId}`, method: 'get' });
+// 获取销售数据的数据
+export const reqSpuSaleAttrList = (spuId) => request({ url: `/dev1-api/admin/product/spuSaleAttrList/${spuId}`, method: 'get' });
+// 获取平台的数据
+export const reqAttrInfoList = (category1Id,category2Id,category3Id) => request({ url: `/dev1-api/admin/product/attrInfoList/${category1Id}/${category2Id}/${category3Id}`, method: 'get' });
+
+// 添加sku
+export const reqAddSku = (skuInfo) => request({ url: '/dev1-api/admin/product/saveSkuInfo', method: 'post',data:skuInfo });
+
