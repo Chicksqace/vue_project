@@ -16,7 +16,7 @@
             <template slot-scope="{ row, $index }">
               <hint-button type="success" icon="el-icon-plus" size="mini" title="添加sku" @click="addSku(row)"></hint-button>
               <hint-button type="warning" icon="el-icon-edit" size="mini" title="修改spu" @click="updateSpu(row)"></hint-button>
-              <hint-button type="info" icon="el-icon-info" size="mini" title="参看当前spu全部sku列表"></hint-button>
+              <hint-button type="info" icon="el-icon-info" size="mini" title="参看当前spu全部sku列表" @click="handler(row)"></hint-button>
               <el-popconfirm title="这是一段内容确定删除吗？" @onConfirm="deleteSpu(row)">
                 <hint-button type="danger" icon="el-icon-delete" size="mini" title="删除spu" slot="reference"></hint-button>
               </el-popconfirm>
@@ -30,6 +30,18 @@
       <SpuForm v-show="scene == 1" @changeScene="changeScene" ref="spu"></SpuForm>
       <SkuForm v-show="scene == 2" ref="sku" @changScenes="changScenes"></SkuForm>
     </el-card>
+    <el-dialog :title="`${spu.spuName}的sku列表`" :visible.sync="dialogTableVisible" :before-close="close">
+      <el-table :data="skuList" border v-loading="loading" >
+        <el-table-column property="skuName" label="名称" width="150"></el-table-column>
+        <el-table-column property="price" label="价值" width="200"></el-table-column>
+        <el-table-column property="weight" label="重量"></el-table-column>
+        <el-table-column label="默认图片">
+            <template slot-scope="{row,$index}">
+              <img :src="row.skuDefaultImg" alt="" style="width: 100px;height: 100px;">
+            </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -37,6 +49,7 @@
 // 引入子组件
 import SpuForm from './SpuFrom'
 import SkuForm from './SkuFrom'
+import { done } from 'nprogress'
 export default {
   name: 'Spu',
   data() {
@@ -50,7 +63,11 @@ export default {
       limit: 3, //每一页需要展示多少条数据
       records: [], //spu列表的数据
       total: 0, //分页器一共需要展示数据的条数
-      scene: 0 //0代表战术spu列表数据 1添加spu 2添加sku
+      scene: 0, //0代表战术spu列表数据 1添加spu 2添加sku
+      dialogTableVisible:false,//显示对话框显示与隐藏
+      spu:{},
+      skuList:[],//sku列表数据
+      loading:true,
     }
   },
   methods: {
@@ -96,13 +113,12 @@ export default {
       this.$refs.spu.initSpuData(row)
     },
     async deleteSpu(row) {
-      let result=await this.$Api.spu.reqDeleteSpu(row.id);
-      if(result.code==200){
-        this.$message({type:'success',message:'删除成功'});
+      let result = await this.$Api.spu.reqDeleteSpu(row.id)
+      if (result.code == 200) {
+        this.$message({ type: 'success', message: '删除成功' })
         //  spu个数大于1删除停留当前页，小于1返回上一页
-        this.getSpuList(this.records.length>1?this.page:this.page-1);
+        this.getSpuList(this.records.length > 1 ? this.page : this.page - 1)
       }
-      
     },
     changeScene({ scene, flag }) {
       // flag这个判断添加还是修改
@@ -115,20 +131,33 @@ export default {
       }
     },
     // 添加sku回调
-    addSku(row){
+    addSku(row) {
       // 切换场景为2
-      this.scene=2;
-      this.$refs.sku.getData(this.category1Id,this.category2Id,row);
+      this.scene = 2
+      this.$refs.sku.getData(this.category1Id, this.category2Id, row)
     },
-    changScenes(scene){
-      this.scene=scene
+    changScenes(scene) {
+      this.scene = scene
       // SkuForm切换场景
     },
-    // 点击分页器第几页按钮的回调
-    // handleCurrentChange(page){
-    //   this.page=page
-    //   this.getSpuList()
-    // }
+    // 查看sku列表
+    async handler(spu){
+      this.dialogTableVisible=true
+      this.spu=spu
+      let result=await this.$Api.spu.reqSkuList(spu.id)
+      console.log(result);
+      if(result.code==200){
+        this.skuList=result.data;
+        this.loading=false;
+      }
+    },
+    // 关闭对话的回调
+    close(done){
+      this.loading=true;
+      this.skuList=[];
+      // 关闭对话框
+      done();
+    }
   },
   components: {
     SpuForm,
