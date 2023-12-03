@@ -1,38 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        *{
-            margin: 0;
-            padding: 0;
-        }
-        .box{
-            width: 800px;
-            height: 800px;
-        }
-    </style>
-</head>
-<body>
-    <svg class="box">
-        <!-- <line x1="100" y1="100" x2="200" y2="200" stroke="red"></line>
-        <polyline points="300 300, 50 100, 120 400,20,20" fill-opacity="0" stroke="cyan"></polyline>
-        <rect x="400" y="400" width="150" height="50" fill="pink"></rect> -->
-        <!-- <circle cx='370' cy='95' r='50' style='stroke:cyan; fill:none'></circle> -->
-        <!-- <ellipse cx="500" cy="500" rx="100" ry="50" style="fill:black;"></ellipse> -->
-        <!-- <polygon points="600 100, 300 400, 750 100" stroke="red" fill-opacity="0" /> -->
-        <path fill-opacity="0" stroke="skyblue" d="
-        M 10  10
-        L 20 400
-        L 30 120
-        L 40 66
-        L 50 99
-        L 60 120
-        L 70 99
-        Z
-      "></path>
-    </svg>
-</body>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>ECharts</title>
+    <!-- 引入刚刚下载的 ECharts 文件 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.4.3/echarts.common.js"></script>
+  </head>
+  <body>
+    <!-- 为 ECharts 准备一个定义了宽高的 DOM -->
+    <div id="main" style="width: 600px;height:400px;"></div>
+    <div id="main1" style="width: 600px;height:400px;"></div>
+    <script type="text/javascript">
+      // 基于准备好的dom，初始化echarts实例
+      var myChart = echarts.init(document.getElementById('main'));
+      var myChart1 = echarts.init(document.getElementById('main1'));
+
+      // 指定图表的配置项和数据
+      var option = {
+        title: {
+          text: '数据可视化--ECharts入门',
+        },
+        tooltip: {},
+        xAxis: {
+          data: ['食品', '数码', '服饰', '背包']
+        },
+        yAxis: {
+            axiosLine:{
+                show:true
+            },
+            axiosTick:{
+                show:true
+            }
+        },
+        series: [
+          {
+            type: 'bar',
+            data: [30, 60,90, 110, 150],
+            color:'red'
+          }
+        ]
+      };
+      var option2 = {
+        title: {
+          text: '数据可视化--ECharts入门测试',
+        },
+        tooltip: {},
+        xAxis: {
+          data: ['食品', '数码', '服饰', '背包']
+        },
+        yAxis: {
+            axiosLine:{
+                show:true
+            },
+            axiosTick:{
+                show:true
+            }
+        },
+        series: [
+          {
+            type: 'scatter',
+            data: [30, 60,90, 110, 150],
+            color:'blue'
+          }
+        ]
+      };
+      // 使用刚指定的配置项和数据显示图表。
+      myChart.setOption(option);
+      myChart1.setOption(option2);
+    </script>
+  </body>
 </html>
