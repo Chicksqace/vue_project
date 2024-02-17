@@ -1,4 +1,4 @@
-const Mock = require('mockjs')
+const data=require('./data.json')
 
 
 module.exports = [
