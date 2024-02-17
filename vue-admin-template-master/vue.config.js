@@ -50,7 +50,7 @@ module.exports = {
         pathRewrite: { '^/dev1-api': '' },
       },
     },
-    // before: require('./mock/mock-server.js')
+    after: require('./mock/mock-server.js')
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
