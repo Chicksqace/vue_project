@@ -216,7 +216,7 @@ export default {
       })
       try {
         //发请求
-        await this.$API.attr.reqAddOrUpdateAttr(this.attrInfo)
+        await this.$Api.attr.reqAddOrUpdateAttr(this.attrInfo)
         //展示平台属性的信号量进行切换
         this.isShowTable = true
         //提示消失
