@@ -168,7 +168,7 @@ export default {
         if (success) {
           this.dialogFormVisible = false;
           //发请求（添加品牌|修改品牌）
-          let result = await this.$API.trademark.reqAddOrUpdateTradeMark(
+          let result = await this.$Api.trademark.reqAddOrUpdateTradeMark(
             this.tmForm
           );
           if (result.code == 200) {
