@@ -1,6 +1,7 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { resetRouter } from '@/router'
+import { resetRouter,asyncRoutes,constantRoutes,anyRoutes } from '@/router'
+import router from '@/router'
 
 const getDefaultState = () => {
   return {
@@ -9,7 +10,11 @@ const getDefaultState = () => {
     avatar: '',
     routes:[],
     roles:[],
-    buttons:[]
+    buttons:[],
+    //对比之后【项目中已有的异步路由，与服务器返回的标记信息进行对比最终需要展示的路由】
+    rsultAsyncRoutes:[],
+    //用户最终需要展示全部路由
+    resultAllRputes:[]
   }
 }
 
@@ -34,8 +39,13 @@ SET_USERINFO:(state,userInfo)=>{
   state.buttons=userInfo.buttons
   // 角色
   state.roles=userInfo.roles
+},
+//最终计算出的异步路由
+SET_RESULTASYNCROUTES:(state,asyncRoutes)=>{
+  state.rsultAsyncRoutes=asyncRoutes
+  state.resultAllRputes=constantRoutes.concat(state.rsultAsyncRoutes,anyRoutes)
+  // 给路由器添加新的路由
 }
-
 }
 
 const actions = {
@@ -66,6 +76,7 @@ const actions = {
         }
         // vue存储用户全部的信息
         commit('SET_USERINFO',data)
+        commit('SET_RESULTASYNCROUTES',computedAsyncRoutes(asyncRoutes,data.routes))
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -95,6 +106,22 @@ const actions = {
       resolve()
     })
   }
+}
+
+//定义一个函数：俩个数组进行对比，对比出当前用户到底显示那些异步路由
+const computedAsyncRoutes=(asyncRoutes,routes)=>{
+  //过滤出当前用户需要展示的异步
+  return asyncRoutes.filter(item=>{
+    // 说明存在
+    if(routes.indexOf(item.name)!=-1){
+      //递归 还别下级路由
+      if(item.children&&item.children.length){
+        item.children=computedAsyncRoutes(item.children,routes)
+      }
+      return true 
+    }
+  })
+
 }
 
 export default {

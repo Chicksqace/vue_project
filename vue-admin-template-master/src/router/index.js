@@ -87,6 +87,13 @@ export const constantRoutes = [
       },
     ]
   },
+ 
+
+  
+]
+// 异步路由
+
+export const asyncRoutes=[
   {
     name: 'Acl',
     path: '/acl',
@@ -133,13 +140,11 @@ export const constantRoutes = [
       },
     ]
   },
-
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
 ]
-// 异步路由
 
-export const asyncRoutes=[]
+// 任意路由
+export const anyRoutes=// 404 page must be placed at the end !!!
+{ path: '*', redirect: '/404', hidden: true }
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
