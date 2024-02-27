@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 
-const api_name = '/admin/acl/user'
+const api_name = '/dev-api/admin/acl/user'
 
 /*
 登陆
 */
 export function login({ username, password }) {
   return request({
-    url: '/admin/acl/index/login',
+    url: '/dev-api/admin/acl/index/login',
     method: 'post',
     data: { username, password }
   })
@@ -18,7 +18,7 @@ export function login({ username, password }) {
 */
 export function getInfo() {
   return request({
-    url: '/admin/acl/index/info',
+    url: '/dev-api/admin/acl/index/info',
     method: 'get'
   })
 }
@@ -28,7 +28,7 @@ export function getInfo() {
 */
 export function logout() {
   return request({
-    url: '/admin/acl/index/logout',
+    url: '/dev-api/admin/acl/index/logout',
     method: 'post'
   })
 }

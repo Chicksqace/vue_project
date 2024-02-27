@@ -3,7 +3,7 @@
 */
 import request from '@/utils/request'
 
-const api_name = '/admin/acl/role'
+const api_name = '/dev-api/admin/acl/role'
 
 export default {
 
