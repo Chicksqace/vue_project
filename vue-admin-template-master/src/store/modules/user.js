@@ -45,6 +45,7 @@ SET_RESULTASYNCROUTES:(state,asyncRoutes)=>{
   state.rsultAsyncRoutes=asyncRoutes
   state.resultAllRputes=constantRoutes.concat(state.rsultAsyncRoutes,anyRoutes)
   // 给路由器添加新的路由
+  router.addRoutes(state.resultAllRputes)
 }
 }
 
